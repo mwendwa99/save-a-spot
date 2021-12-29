@@ -20,6 +20,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
-app.initializeApp(firebaseConfig);
+// app.initializeApp(firebaseConfig);
 
-export { analytics };
+export { app, analytics };
