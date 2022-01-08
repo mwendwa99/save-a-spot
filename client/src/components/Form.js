@@ -3,9 +3,9 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { makeStyles } from '@mui/styles';
+import { Link } from 'react-router-dom';
 
 import BasicButtons from './Button';
-import { useAuth } from '../provider/Authentication';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -27,15 +27,13 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function Form() {
+function Form({ title, setEmail, setPassword, handleAction }) {
     const classes = useStyles();
-    const { signIn } = useAuth();
 
     const login = (e) => {
         e.preventDefault();
-        const email = e.target.email.value;
-        const password = e.target.password.value;
-        signIn(email, password);
+        setEmail(e.target.email.value);
+        setPassword(e.target.password.value);
     };
 
     return (
@@ -50,7 +48,7 @@ function Form() {
             autoComplete="off"
             onSubmit={(e) => login(e)}
         >
-            <Typography align='center' variant="h4">Login</Typography>
+            <Typography align='center' variant="h4">{title}</Typography>
             <TextField
                 required
                 id="email"
@@ -67,7 +65,18 @@ function Form() {
                 label="password"
                 placeholder='xyz'
             />
-            <BasicButtons type="submit" />
+            <BasicButtons type="submit" title={title} handleAction={() => handleAction()} />
+            {
+                title === 'Sign In' ?
+                    <Typography align='center' variant="body1">Do not have an account? create one &nbsp;
+                        <Link to='/register' >here</Link>
+                    </Typography>
+                    : title === 'Sign Up' ?
+                        <Typography align='center' variant="body1">Already have an account? sign in &nbsp;
+                            <Link to='/' >here</Link>
+                        </Typography>
+                        : null
+            }
         </Box>
     );
 }

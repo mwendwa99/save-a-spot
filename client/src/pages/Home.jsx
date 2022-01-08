@@ -1,7 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Typography, Container, Box, Grid } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+
+import Button from '../components/Button';
 
 const Home = () => {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        let token = sessionStorage.getItem('authToken');
+        if (!token) {
+            navigate('/');
+        }
+    }, []);
+
+    const logout = () => {
+        sessionStorage.removeItem('authToken');
+        navigate('/');
+    };
+
     return (
         <Container maxWidth='md'>
             <Box mb={2}>
@@ -10,11 +27,7 @@ const Home = () => {
                 </Typography>
             </Box>
             <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <Typography variant='h2' align='center'>
-                        Home
-                    </Typography>
-                </Grid>
+                <Button title="logout" handleAction={() => logout()} />
             </Grid>
         </Container>
     );

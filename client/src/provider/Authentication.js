@@ -8,33 +8,29 @@ const auth = getAuth();
 
 const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState(null);
 
-    const signIn = async (email, password) => {
-        setLoading(true);
-        await signInWithEmailAndPassword(auth, email, password)
+    const signIn = (email, password) => {
+        signInWithEmailAndPassword(auth, email, password)
             .then(res => {
-                setCurrentUser(res.user);
-                setLoading(false);
+                setCurrentUser(res.user.uid);
+                sessionStorage.setItem('authToken', res._tokenResponse.refreshToken);
+                setMessage(res.code)
             })
             .catch(err => {
-                setError(err.message);
-                setLoading(false);
+                setMessage(err.code);
             });
     };
 
     const signUp = (email, password) => {
-        setLoading(true);
-
         createUserWithEmailAndPassword(auth, email, password)
             .then(res => {
-                setCurrentUser(res.user);
-                setLoading(false);
+                setCurrentUser(res.user.uid);
+                sessionStorage.setItem('authToken', res._tokenResponse.refreshToken);
+                setMessage(res.code)
             })
             .catch(err => {
-                setError(err.message);
-                setLoading(false);
+                setMessage(err.code);
             });
     };
 
@@ -50,8 +46,7 @@ const AuthProvider = ({ children }) => {
     return (
         <AuthContext.Provider value={{
             currentUser,
-            error,
-            loading,
+            message,
             signIn,
             signUp,
             signOut,
