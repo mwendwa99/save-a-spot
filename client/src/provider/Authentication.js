@@ -4,15 +4,16 @@ import { app } from '../config/firebase-config';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 
 const AuthContext = createContext();
+const auth = getAuth();
 
 const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const signIn = (email, password) => {
+    const signIn = async (email, password) => {
         setLoading(true);
-        signInWithEmailAndPassword(email, password)
+        await signInWithEmailAndPassword(auth, email, password)
             .then(res => {
                 setCurrentUser(res.user);
                 setLoading(false);
@@ -26,7 +27,7 @@ const AuthProvider = ({ children }) => {
     const signUp = (email, password) => {
         setLoading(true);
 
-        createUserWithEmailAndPassword(email, password)
+        createUserWithEmailAndPassword(auth, email, password)
             .then(res => {
                 setCurrentUser(res.user);
                 setLoading(false);

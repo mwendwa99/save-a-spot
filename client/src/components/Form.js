@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import { makeStyles } from '@mui/styles';
 
 import BasicButtons from './Button';
+import { useAuth } from '../provider/Authentication';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -28,6 +29,14 @@ const useStyles = makeStyles(theme => ({
 
 function Form() {
     const classes = useStyles();
+    const { signIn } = useAuth();
+
+    const login = (e) => {
+        e.preventDefault();
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+        signIn(email, password);
+    };
 
     return (
         <Box
@@ -39,27 +48,26 @@ function Form() {
             }}
             noValidate
             autoComplete="off"
+            onSubmit={(e) => login(e)}
         >
-            <div className={classes.form}>
-                <Typography align='center' variant="h4">Login</Typography>
-                <TextField
-                    required
-                    id="outlined-helperText"
-                    label="Email"
-                    placeholder='user@user.com'
-                    autoComplete='username'
-                />
-                <TextField
-                    fullWidth
-                    required
-                    autoComplete='current-password'
-                    type='password'
-                    id="outlined-password-input"
-                    label="Password"
-                    placeholder='xyz'
-                />
-                <BasicButtons />
-            </div>
+            <Typography align='center' variant="h4">Login</Typography>
+            <TextField
+                required
+                id="email"
+                label="email"
+                placeholder='user@user.com'
+                autoComplete='username'
+            />
+            <TextField
+                fullWidth
+                required
+                autoComplete='current-password'
+                type='password'
+                id="password"
+                label="password"
+                placeholder='xyz'
+            />
+            <BasicButtons type="submit" />
         </Box>
     );
 }
