@@ -10,13 +10,13 @@ const Home = () => {
     useEffect(() => {
         let token = sessionStorage.getItem('authToken');
         if (!token) {
-            navigate('/');
+            navigate('/login');
         }
-    }, []);
+    }, [navigate]);
 
     const logout = () => {
         sessionStorage.removeItem('authToken');
-        navigate('/');
+        navigate('/login');
     };
 
     return (

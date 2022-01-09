@@ -30,10 +30,8 @@ const useStyles = makeStyles(theme => ({
 function Form({ title, setEmail, setPassword, handleAction }) {
     const classes = useStyles();
 
-    const login = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        setEmail(e.target.email.value);
-        setPassword(e.target.password.value);
     };
 
     return (
@@ -46,7 +44,7 @@ function Form({ title, setEmail, setPassword, handleAction }) {
             }}
             noValidate
             autoComplete="off"
-            onSubmit={(e) => login(e)}
+            onSubmit={(e) => handleSubmit(e)}
         >
             <Typography align='center' variant="h4">{title}</Typography>
             <TextField
@@ -54,12 +52,15 @@ function Form({ title, setEmail, setPassword, handleAction }) {
                 id="email"
                 label="email"
                 placeholder='user@user.com'
+                onChange={(e) => setEmail(e.target.value)}
                 autoComplete='username'
             />
             <TextField
                 fullWidth
                 required
                 autoComplete='current-password'
+                onChange={(e) => setPassword(e.target.value)}
+                // value={password}
                 type='password'
                 id="password"
                 label="password"

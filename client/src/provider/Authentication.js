@@ -10,11 +10,16 @@ const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [message, setMessage] = useState(null);
 
-    const signIn = (email, password) => {
-        signInWithEmailAndPassword(auth, email, password)
+    const signIn = async (email, password) => {
+        // check whether email nd password is string
+        if (typeof email !== 'string' || typeof password !== 'string') {
+            setMessage('Email and password must be string');
+            return;
+        }
+        await signInWithEmailAndPassword(auth, email, password)
             .then(res => {
-                setCurrentUser(res.user.uid);
                 sessionStorage.setItem('authToken', res._tokenResponse.refreshToken);
+                setCurrentUser(res.user.uid);
                 setMessage(res.code)
             })
             .catch(err => {
@@ -22,8 +27,14 @@ const AuthProvider = ({ children }) => {
             });
     };
 
-    const signUp = (email, password) => {
-        createUserWithEmailAndPassword(auth, email, password)
+    const signUp = async (email, password) => {
+        // check whether email and password is string
+        if (typeof email !== 'string' || typeof password !== 'string') {
+            setMessage('Email and password must be string');
+            return;
+        }
+
+        await createUserWithEmailAndPassword(auth, email, password)
             .then(res => {
                 setCurrentUser(res.user.uid);
                 sessionStorage.setItem('authToken', res._tokenResponse.refreshToken);
@@ -47,6 +58,7 @@ const AuthProvider = ({ children }) => {
         <AuthContext.Provider value={{
             currentUser,
             message,
+            auth,
             signIn,
             signUp,
             signOut,
