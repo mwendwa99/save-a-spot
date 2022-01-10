@@ -13,10 +13,8 @@ function App() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const { signIn, signUp, message } = useAuth();
-  // console.log(message)
 
   useEffect(() => {
-    // toast.error(message);
     let auth = sessionStorage.getItem('authToken');
     if (auth) {
       navigate('/home');
@@ -27,15 +25,12 @@ function App() {
 
   const handleAction = (action) => {
     if (action === 'signin') {
-      // console.log(email, password)
       toast.info(message);
       signIn(email, password);
-      navigate('/home');
     }
     if (action === 'signup') {
       toast.info(message);
       signUp(email, password);
-      navigate('/home');
     }
   }
 
@@ -52,7 +47,7 @@ function App() {
         <Route path='/home' element={<Home />} />
         <Route path='*' element={<Navigate to="/login" replace />} />
       </Routes>
-    </div>
+    </div >
   );
 }
 

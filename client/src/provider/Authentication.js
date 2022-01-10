@@ -1,4 +1,5 @@
 import React, { useState, useContext, createContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { app } from '../config/firebase-config';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
@@ -9,9 +10,12 @@ const auth = getAuth();
 const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [message, setMessage] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     const signIn = async (email, password) => {
         // check whether email nd password is string
+        setIsLoading(true);
         if (typeof email !== 'string' || typeof password !== 'string') {
             setMessage('Email and password must be string');
             return;
@@ -20,14 +24,15 @@ const AuthProvider = ({ children }) => {
             .then(res => {
                 sessionStorage.setItem('authToken', res._tokenResponse.refreshToken);
                 setCurrentUser(res.user.uid);
-                setMessage(res.code)
-            })
-            .catch(err => {
+                setMessage(res.code);
+                setIsLoading(false);
+            }).then(() => navigate('/home')).catch(err => {
                 setMessage(err.code);
             });
     };
 
     const signUp = async (email, password) => {
+        setIsLoading(true);
         // check whether email and password is string
         if (typeof email !== 'string' || typeof password !== 'string') {
             setMessage('Email and password must be string');
@@ -38,9 +43,9 @@ const AuthProvider = ({ children }) => {
             .then(res => {
                 setCurrentUser(res.user.uid);
                 sessionStorage.setItem('authToken', res._tokenResponse.refreshToken);
-                setMessage(res.code)
-            })
-            .catch(err => {
+                setMessage(res.code);
+                setIsLoading(false);
+            }).then(() => navigate('/home')).catch(err => {
                 setMessage(err.code);
             });
     };
@@ -59,6 +64,7 @@ const AuthProvider = ({ children }) => {
             currentUser,
             message,
             auth,
+            isLoading,
             signIn,
             signUp,
             signOut,
