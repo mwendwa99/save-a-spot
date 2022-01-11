@@ -3,11 +3,9 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { makeStyles } from '@mui/styles';
-import { Link, Navigate } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
+import { NavLink } from 'react-router-dom';
 
 import BasicButtons from './Button';
-import { useAuth } from '../provider/Authentication';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -31,13 +29,12 @@ const useStyles = makeStyles(theme => ({
 
 function Form({ title, setEmail, setPassword, handleAction }) {
     const classes = useStyles();
-    const { isLoading } = useAuth();
 
     const handleSubmit = (e) => {
         e.preventDefault();
     };
 
-    return !isLoading ? (
+    return (
         <Box
             className={classes.root}
             component="form"
@@ -69,22 +66,25 @@ function Form({ title, setEmail, setPassword, handleAction }) {
                 placeholder='xyz'
             />
             <BasicButtons type="submit" title={title} handleAction={() => handleAction()} />
-            <Typography align='center' variant="body1">Do not have an account? create one &nbsp;
-                <Link to='/register' >here</Link>
-            </Typography>
-            {/* {
+            {
                 title === 'Sign In' ?
                     <Typography align='center' variant="body1">Do not have an account? create one &nbsp;
-                        <Navigate to='/register' >here</Navigate>
+                        <NavLink
+                            style={({ isActive }) => {
+                                return {
+                                    color: isActive ? "yellow" : "green"
+                                }
+                            }}
+                            to='/register' >here</NavLink>
                     </Typography>
                     : title === 'Sign Up' ?
                         <Typography align='center' variant="body1">Already have an account? sign in &nbsp;
-                            <Navigate to='/login' >here</Navigate>
+                            <NavLink to='/login' >here</NavLink>
                         </Typography>
                         : null
-            } */}
+            }
         </Box>
-    ) : <CircularProgress color='primary' thickness={4} size={40} />
+    )
 }
 
 export { Form };

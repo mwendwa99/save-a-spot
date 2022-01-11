@@ -13,41 +13,44 @@ const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
-    const signIn = async (email, password) => {
+    const signIn = (email, password) => {
         // check whether email nd password is string
         setIsLoading(true);
         if (typeof email !== 'string' || typeof password !== 'string') {
             setMessage('Email and password must be string');
             return;
         }
-        await signInWithEmailAndPassword(auth, email, password)
-            .then(res => {
-                sessionStorage.setItem('authToken', res._tokenResponse.refreshToken);
-                setCurrentUser(res.user.uid);
-                setMessage(res.code);
-                setIsLoading(false);
-            }).then(() => navigate('/home')).catch(err => {
-                setMessage(err.code);
-            });
+        try {
+            signInWithEmailAndPassword(auth, email, password)
+                .then(res => {
+                    sessionStorage.setItem('authToken', res._tokenResponse.refreshToken);
+                    setCurrentUser(res.user.uid);
+                    setMessage(res);
+                }).then(() => navigate('/home')).catch(err => {
+                    setMessage(err.code);
+                });
+        } catch (err) {
+            setMessage(err);
+        }
+        setIsLoading(false);
     };
 
-    const signUp = async (email, password) => {
+    const signUp = (email, password) => {
         setIsLoading(true);
         // check whether email and password is string
         if (typeof email !== 'string' || typeof password !== 'string') {
             setMessage('Email and password must be string');
             return;
         }
-
-        await createUserWithEmailAndPassword(auth, email, password)
+        createUserWithEmailAndPassword(auth, email, password)
             .then(res => {
-                setCurrentUser(res.user.uid);
                 sessionStorage.setItem('authToken', res._tokenResponse.refreshToken);
-                setMessage(res.code);
-                setIsLoading(false);
+                setCurrentUser(res.user.uid);
+                setMessage(res);
             }).then(() => navigate('/home')).catch(err => {
                 setMessage(err.code);
             });
+        setIsLoading(false);
     };
 
     const signOut = () => {
@@ -63,7 +66,6 @@ const AuthProvider = ({ children }) => {
         <AuthContext.Provider value={{
             currentUser,
             message,
-            auth,
             isLoading,
             signIn,
             signUp,

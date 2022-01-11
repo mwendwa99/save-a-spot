@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -8,29 +8,25 @@ import Home from './pages/Home';
 import { Form } from './components/Form';
 import { useAuth } from './provider/Authentication';
 
+
 function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
   const { signIn, signUp, message } = useAuth();
+  let auth = sessionStorage.getItem('authToken');
 
   useEffect(() => {
-    let auth = sessionStorage.getItem('authToken');
-    if (auth) {
-      navigate('/home');
-    } else {
-      navigate('/login');
-    }
-  }, [navigate, message]);
+    toast.error(message)
+  }, [message])
 
   const handleAction = (action) => {
     if (action === 'signin') {
-      toast.info(message);
       signIn(email, password);
+      toast.error(message);
     }
     if (action === 'signup') {
-      toast.info(message);
       signUp(email, password);
+      toast.error(message);
     }
   }
 
@@ -38,14 +34,25 @@ function App() {
     <div className="App">
       <ToastContainer position='top-center' />
       <Routes>
-        <Route path='/login' element={
-          <Form setEmail={setEmail} setPassword={setPassword} title='Sign In' handleAction={() => handleAction('signin')} />
-        } />
-        <Route path='/register' element={
-          <Form setEmail={setEmail} setPassword={setPassword} title='Sign Up' handleAction={() => handleAction('signup')} />
-        } />
-        <Route path='/home' element={<Home />} />
-        <Route path='*' element={<Navigate to="/login" replace />} />
+        {
+          auth ?
+            (
+              <>
+                <Route path='/home' element={<Home />} />
+                <Route path='*' element={<Navigate to="/home" replace />} />
+              </>
+            ) : (
+              <>
+                <Route path='/register' element={
+                  <Form setEmail={setEmail} setPassword={setPassword} title='Sign Up' handleAction={() => handleAction('signup')} />
+                } />
+                <Route path='/login' element={
+                  <Form setEmail={setEmail} setPassword={setPassword} title='Sign In' handleAction={() => handleAction('signin')} />
+                } />
+                <Route path='*' element={<Navigate to="/login" replace />} />
+              </>
+            )
+        }
       </Routes>
     </div >
   );
