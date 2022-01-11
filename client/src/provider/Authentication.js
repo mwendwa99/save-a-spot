@@ -26,13 +26,13 @@ const AuthProvider = ({ children }) => {
                     sessionStorage.setItem('authToken', res._tokenResponse.refreshToken);
                     setCurrentUser(res.user.uid);
                     setMessage(res);
+                    setIsLoading(false);
                 }).then(() => navigate('/home')).catch(err => {
                     setMessage(err.code);
                 });
         } catch (err) {
             setMessage(err);
         }
-        setIsLoading(false);
     };
 
     const signUp = (email, password) => {
@@ -47,10 +47,10 @@ const AuthProvider = ({ children }) => {
                 sessionStorage.setItem('authToken', res._tokenResponse.refreshToken);
                 setCurrentUser(res.user.uid);
                 setMessage(res);
+                setIsLoading(false);
             }).then(() => navigate('/home')).catch(err => {
                 setMessage(err.code);
             });
-        setIsLoading(false);
     };
 
     const signOut = () => {

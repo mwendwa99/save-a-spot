@@ -7,8 +7,7 @@ import { useAuth } from '../provider/Authentication';
 
 const Home = () => {
     const navigate = useNavigate();
-    const { isLoading, currentUser } = useAuth();
-    console.log('user', currentUser)
+    const { isLoading } = useAuth();
 
     const logout = () => {
         sessionStorage.removeItem('authToken');
