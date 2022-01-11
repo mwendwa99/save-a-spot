@@ -33,7 +33,7 @@ function Form({ title, setEmail, setPassword, handleAction }) {
     const { isLoading } = useAuth();
     const auth = getAuth()
 
-    console.log('userID', auth.currentUser.uid)
+    // console.log('userID', auth.currentUser.uid)
 
     const handleSubmit = (e) => {
         e.preventDefault();

@@ -51,7 +51,7 @@ const AuthProvider = ({ children }) => {
     };
 
     const signOut = () => {
-        app.auth().signOut();
+        auth.signOut()
         sessionStorage.removeItem('authToken')
         navigate('/login');
     };

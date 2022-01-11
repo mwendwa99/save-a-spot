@@ -1,17 +1,13 @@
 import React from 'react';
 import { Typography, Container, Box, Grid } from '@mui/material';
 
-import { getAuth } from 'firebase/auth';
-
 import Button from '../components/Button';
 import Map from '../components/Map';
 import { useAuth } from '../provider/Authentication';
 
 const Home = () => {
-    const auth = getAuth();
     const { signOut } = useAuth();
 
-    console.log('auth', auth.currentUser.uid)
 
     const logout = () => {
         signOut();
