@@ -27,6 +27,7 @@ const AuthProvider = ({ children }) => {
                     setIsLoading(false);
                 }).then(() => navigate('/home')).catch(err => {
                     setMessage(err.code);
+                    setIsLoading(false);
                 });
         } catch (err) {
             setMessage(err);
@@ -47,6 +48,7 @@ const AuthProvider = ({ children }) => {
                 setIsLoading(false);
             }).then(() => navigate('/home')).catch(err => {
                 setMessage(err.code);
+                setIsLoading(false);
             });
     };
 
