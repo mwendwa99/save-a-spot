@@ -1,16 +1,20 @@
 import React from 'react';
 import { Typography, Container, Box, Grid } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+
+import { getAuth } from 'firebase/auth';
 
 import Button from '../components/Button';
 import Map from '../components/Map';
+import { useAuth } from '../provider/Authentication';
 
 const Home = () => {
-    const navigate = useNavigate();
+    const auth = getAuth();
+    const { signOut } = useAuth();
+
+    console.log('auth', auth.currentUser.uid)
 
     const logout = () => {
-        sessionStorage.removeItem('authToken');
-        navigate('/login');
+        signOut();
     };
 
     return (
@@ -21,7 +25,7 @@ const Home = () => {
                 </Typography>
                 <Button title="logout" handleAction={() => logout()} />
             </Box>
-            <Grid continer>
+            <Grid continer="true">
                 <Map />
             </Grid>
         </Container>

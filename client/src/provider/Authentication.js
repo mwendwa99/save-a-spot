@@ -8,7 +8,6 @@ const AuthContext = createContext();
 const auth = getAuth();
 
 const AuthProvider = ({ children }) => {
-    const [currentUser, setCurrentUser] = useState(null);
     const [message, setMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -24,7 +23,6 @@ const AuthProvider = ({ children }) => {
             signInWithEmailAndPassword(auth, email, password)
                 .then(res => {
                     sessionStorage.setItem('authToken', res._tokenResponse.refreshToken);
-                    setCurrentUser(res.user.uid);
                     setMessage(res);
                     setIsLoading(false);
                 }).then(() => navigate('/home')).catch(err => {
@@ -45,7 +43,6 @@ const AuthProvider = ({ children }) => {
         createUserWithEmailAndPassword(auth, email, password)
             .then(res => {
                 sessionStorage.setItem('authToken', res._tokenResponse.refreshToken);
-                setCurrentUser(res.user.uid);
                 setMessage(res);
                 setIsLoading(false);
             }).then(() => navigate('/home')).catch(err => {
@@ -55,16 +52,16 @@ const AuthProvider = ({ children }) => {
 
     const signOut = () => {
         app.auth().signOut();
-        setCurrentUser(null);
+        sessionStorage.removeItem('authToken')
+        navigate('/login');
     };
 
     const updateUser = (user) => {
-        setCurrentUser(user);
+        sessionStorage.clear('authToken')
     };
 
     return (
         <AuthContext.Provider value={{
-            currentUser,
             message,
             isLoading,
             signIn,

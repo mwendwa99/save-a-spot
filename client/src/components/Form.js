@@ -1,14 +1,14 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import { Typography, CircularProgress } from '@mui/material';
+import { Typography, Box, TextField, CircularProgress } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { NavLink } from 'react-router-dom';
+
+import { getAuth } from 'firebase/auth';
 
 import BasicButtons from './Button';
 import { useAuth } from '../provider/Authentication'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     root: {
         display: 'flex',
         flexDirection: 'column',
@@ -31,6 +31,9 @@ const useStyles = makeStyles(theme => ({
 function Form({ title, setEmail, setPassword, handleAction }) {
     const classes = useStyles();
     const { isLoading } = useAuth();
+    const auth = getAuth()
+
+    console.log('userID', auth.currentUser.uid)
 
     const handleSubmit = (e) => {
         e.preventDefault();
