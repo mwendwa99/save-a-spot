@@ -1,31 +1,31 @@
 import React from 'react';
-import { Typography, Container, Box, Grid, CircularProgress } from '@mui/material';
+import { Typography, Container, Box, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import Button from '../components/Button';
-import { useAuth } from '../provider/Authentication';
+import Map from '../components/Map';
 
 const Home = () => {
     const navigate = useNavigate();
-    const { isLoading } = useAuth();
 
     const logout = () => {
         sessionStorage.removeItem('authToken');
         navigate('/login');
     };
 
-    return !isLoading ? (
-        <Container maxWidth='md'>
+    return (
+        <Container maxWidth='xl'>
             <Box mb={2}>
-                <Typography variant='h1' align='center'>
+                <Typography variant='h6' align='center'>
                     Home
                 </Typography>
-            </Box>
-            <Grid container spacing={2}>
                 <Button title="logout" handleAction={() => logout()} />
+            </Box>
+            <Grid continer>
+                <Map />
             </Grid>
         </Container>
-    ) : <CircularProgress size={40} thickness={4} color='secondary' />;
+    );
 }
 
 export default Home;
