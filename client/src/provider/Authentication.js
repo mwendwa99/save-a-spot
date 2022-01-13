@@ -36,7 +36,7 @@ const AuthProvider = ({ children }) => {
         }
     };
 
-    const signUp = (email, password, firstName, lastName, plate) => {
+    const signUp = async (email, password, firstName, lastName, plate) => {
         setIsLoading(true);
         // check whether email and password is string
         if (typeof email !== 'string' || typeof password !== 'string') {
@@ -44,15 +44,16 @@ const AuthProvider = ({ children }) => {
             return;
         }
         let data = {
-            firstName: firstName || '',
-            lastName: lastName || '',
-            plate: plate || '',
+            first_name: firstName,
+            last_name: lastName,
+            number_plate: plate.toUpperCase(),
         }
+        let collectionName = 'users';
         createUserWithEmailAndPassword(auth, email, password)
             .then(res => {
                 sessionStorage.setItem('authToken', res._tokenResponse.refreshToken);
-                data.id = res.user.uid || '';
-                postToFireStore('users', data)
+                data.user_id = res.user.uid;
+                postToFireStore(collectionName, data)
                 setMessage(res);
                 setIsLoading(false);
             })

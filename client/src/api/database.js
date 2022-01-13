@@ -1,21 +1,15 @@
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, } from 'firebase/firestore';
 
 // initialize firestore
 const db = getFirestore();
 
 // add data to firestore
-const postToFireStore = async (collectionName, data, setMessage) => {
+const postToFireStore = async (collectionName, data) => {
     switch (collectionName) {
-        case collectionName === 'users': {
+        case 'users': {
             try {
                 // reference to collection
-                const docRef = await addDoc(collection(db, collectionName), {
-                    firstName: data.firstName,
-                    lastName: data.lastName,
-                    id: data.id,
-                    booked: data.booked,
-                    numberPlate: data.plate
-                });
+                const docRef = await addDoc(collection(db, collectionName), data);
                 // setMessage('user successfully saved to db!')
                 console.log("Document written with ID: ", docRef.id);
             } catch (error) {
@@ -23,7 +17,7 @@ const postToFireStore = async (collectionName, data, setMessage) => {
             }
             break;
         }
-        case collectionName === 'organization': {
+        case 'organization': {
             break;
         }
         default: break;

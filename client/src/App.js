@@ -28,9 +28,9 @@ function App() {
       toast.error(message);
     }
     if (action === 'signup') {
-      console.log(email, password, firstName, lastName, plate)
-      // signUp(email, password, firstName, lastName, plate);
-      // toast.error(message);
+      // console.log(email, password, firstName, lastName, plate)
+      signUp(email, password, firstName, lastName, plate);
+      toast.error(message);
     }
   }
 

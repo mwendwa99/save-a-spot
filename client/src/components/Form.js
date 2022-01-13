@@ -34,10 +34,6 @@ function Form({ title, setEmail, setPassword, setFirstName, setLastName, setPlat
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // postToFireStore(
-        //     'users',
-        //     'user'
-        // )
     };
 
     return isLoading ? (<CircularProgress color='secondary' thickness={4} size={40} />)
@@ -68,7 +64,7 @@ function Form({ title, setEmail, setPassword, setFirstName, setLastName, setPlat
                             <TextField
                                 required
                                 autoComplete='firstName'
-                                onChange={(e) => setFirstName(e.target.value)}
+                                onChange={(e) => setFirstName(e.target.value.toUpperCase().charAt(0).slice() + e.target.value.substring(1))}
                                 type='text'
                                 id="firstName"
                                 label="first name"
@@ -77,7 +73,7 @@ function Form({ title, setEmail, setPassword, setFirstName, setLastName, setPlat
                             <TextField
                                 required
                                 autoComplete='lastName'
-                                onChange={(e) => setLastName(e.target.value)}
+                                onChange={(e) => setLastName(e.target.value.toUpperCase().charAt(0).slice() + e.target.value.substring(1))}
                                 type='text'
                                 id="lastName"
                                 label="last name"
@@ -87,7 +83,7 @@ function Form({ title, setEmail, setPassword, setFirstName, setLastName, setPlat
                                 fullWidth
                                 required
                                 autoComplete='number plate'
-                                onChange={(e) => setPlate(e.target.value)}
+                                onChange={(e) => setPlate(e.target.value.toUpperCase())}
                                 type='text'
                                 id="plate"
                                 label="number plate"
