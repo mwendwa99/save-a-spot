@@ -12,6 +12,9 @@ import { useAuth } from './provider/Authentication';
 function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [plate, setPlate] = useState('');
   const { signIn, signUp, message } = useAuth();
   let auth = sessionStorage.getItem('authToken');
 
@@ -25,8 +28,9 @@ function App() {
       toast.error(message);
     }
     if (action === 'signup') {
-      signUp(email, password);
-      toast.error(message);
+      console.log(email, password, firstName, lastName, plate)
+      // signUp(email, password, firstName, lastName, plate);
+      // toast.error(message);
     }
   }
 
@@ -44,7 +48,9 @@ function App() {
             ) : (
               <>
                 <Route path='/register' element={
-                  <Form setEmail={setEmail} setPassword={setPassword} title='Sign Up' handleAction={() => handleAction('signup')} />
+                  <Form setEmail={setEmail} setPassword={setPassword} title='Sign Up' handleAction={() => handleAction('signup')}
+                    setFirstName={setFirstName} setLastName={setLastName} setPlate={setPlate}
+                  />
                 } />
                 <Route path='/login' element={
                   <Form setEmail={setEmail} setPassword={setPassword} title='Sign In' handleAction={() => handleAction('signin')} />

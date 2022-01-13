@@ -3,7 +3,7 @@ import { Typography, Box, TextField, CircularProgress } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { NavLink } from 'react-router-dom';
 
-import { getAuth } from 'firebase/auth';
+import { postToFireStore } from '../api/database';
 
 import BasicButtons from './Button';
 import { useAuth } from '../provider/Authentication'
@@ -28,15 +28,16 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-function Form({ title, setEmail, setPassword, handleAction }) {
+function Form({ title, setEmail, setPassword, setFirstName, setLastName, setPlate, handleAction }) {
     const classes = useStyles();
     const { isLoading } = useAuth();
-    const auth = getAuth()
-
-    // console.log('userID', auth.currentUser.uid)
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        // postToFireStore(
+        //     'users',
+        //     'user'
+        // )
     };
 
     return isLoading ? (<CircularProgress color='secondary' thickness={4} size={40} />)
@@ -61,6 +62,40 @@ function Form({ title, setEmail, setPassword, handleAction }) {
                     onChange={(e) => setEmail(e.target.value)}
                     autoComplete='username'
                 />
+                {
+                    title === 'Sign Up' ?
+                        <>
+                            <TextField
+                                required
+                                autoComplete='firstName'
+                                onChange={(e) => setFirstName(e.target.value)}
+                                type='text'
+                                id="firstName"
+                                label="first name"
+                                placeholder='John'
+                            />
+                            <TextField
+                                required
+                                autoComplete='lastName'
+                                onChange={(e) => setLastName(e.target.value)}
+                                type='text'
+                                id="lastName"
+                                label="last name"
+                                placeholder='Doe'
+                            />
+                            <TextField
+                                fullWidth
+                                required
+                                autoComplete='number plate'
+                                onChange={(e) => setPlate(e.target.value)}
+                                type='text'
+                                id="plate"
+                                label="number plate"
+                                placeholder='KBJ 334O'
+                            />
+                        </>
+                        : null
+                }
                 <TextField
                     fullWidth
                     required

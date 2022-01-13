@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { app } from '../config/firebase-config';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 
+import { postToFireStore } from '../api/database';
+
 const AuthContext = createContext();
 const auth = getAuth();
 
@@ -34,19 +36,27 @@ const AuthProvider = ({ children }) => {
         }
     };
 
-    const signUp = (email, password) => {
+    const signUp = (email, password, firstName, lastName, plate) => {
         setIsLoading(true);
         // check whether email and password is string
         if (typeof email !== 'string' || typeof password !== 'string') {
             setMessage('Email and password must be string');
             return;
         }
+        let data = {
+            firstName: firstName || '',
+            lastName: lastName || '',
+            plate: plate || '',
+        }
         createUserWithEmailAndPassword(auth, email, password)
             .then(res => {
                 sessionStorage.setItem('authToken', res._tokenResponse.refreshToken);
+                data.id = res.user.uid || '';
+                postToFireStore('users', data)
                 setMessage(res);
                 setIsLoading(false);
-            }).then(() => navigate('/home')).catch(err => {
+            })
+            .then(() => navigate('/home')).catch(err => {
                 setMessage(err.code);
                 setIsLoading(false);
             });
