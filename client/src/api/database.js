@@ -11,7 +11,6 @@ const postToFireStore = async (collectionName, data) => {
                 // reference to collection
                 const docRef = await addDoc(collection(db, collectionName), data);
                 // setMessage('user successfully saved to db!')
-                console.log("Document written with ID: ", docRef.id);
             } catch (error) {
                 console.log('error saving document to DB', error)
             }

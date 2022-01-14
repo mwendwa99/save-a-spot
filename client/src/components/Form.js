@@ -3,8 +3,6 @@ import { Typography, Box, TextField, CircularProgress } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { NavLink } from 'react-router-dom';
 
-import { postToFireStore } from '../api/database';
-
 import BasicButtons from './Button';
 import { useAuth } from '../provider/Authentication'
 
