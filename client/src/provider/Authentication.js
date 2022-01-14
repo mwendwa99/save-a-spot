@@ -49,15 +49,15 @@ const AuthProvider = ({ children }) => {
             number_plate: plate.toUpperCase(),
         }
         let collectionName = 'users';
-        createUserWithEmailAndPassword(auth, email, password)
+        createUserWithEmailAndPassword(auth, email, password, firstName, lastName,)
             .then(res => {
                 sessionStorage.setItem('authToken', res._tokenResponse.refreshToken);
                 data.user_id = res.user.uid;
                 postToFireStore(collectionName, data)
                 setMessage(res);
                 setIsLoading(false);
-            }).then(user => {
-                user.updateProfile({
+            }).then(() => {
+                updateProfile(auth.currentUser, {
                     displayName: `${firstName} ${lastName}`,
                 })
             }).then(() => navigate('/home')).catch(err => {
