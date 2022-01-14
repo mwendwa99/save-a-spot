@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Box, Grid } from '@mui/material';
 
 import { getAuth } from 'firebase/auth';
@@ -11,25 +11,27 @@ import assets from '../assets';
 import { useAuth } from '../provider/Authentication';
 
 const Home = () => {
-    const [currentUser, setCurrentUser] = React.useState(null);
+    const [displayName, setDisplayName] = useState('');
     const { signOut } = useAuth();
 
-    React.useEffect(() => {
-        async function getUser() {
-            const user = await getAuth();
-            setCurrentUser(user.currentUser);
-        }
+    useEffect(() => {
+        // async function to get user
+        const getUser = async () => {
+            const user = await getAuth().currentUser;
+            setDisplayName(user.displayName ? user.displayName : 'Anonymous Name');
+        };
         getUser();
-        console.log('display name', currentUser.displayName);
-    }, [currentUser]);
+    }, [])
 
+    console.log('RES', displayName)
     const logout = () => {
         signOut();
     };
 
     return (
         <Container maxWidth='xl'>
-            <NavBar displayName={currentUser.displayName} />
+            <NavBar displayName={displayName} />
+            {/* <NavBar displayName='Anonymous Person' /> */}
             <Button title="logout" handleAction={() => logout()} />
             <Box>
                 <img src={assets.map} alt="map-svg" />

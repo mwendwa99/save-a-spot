@@ -44,6 +44,7 @@ const AuthProvider = ({ children }) => {
             return;
         }
         let data = {
+            email: email,
             first_name: firstName,
             last_name: lastName,
             number_plate: plate.toUpperCase(),
