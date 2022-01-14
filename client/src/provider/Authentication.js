@@ -2,7 +2,7 @@ import React, { useState, useContext, createContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { app } from '../config/firebase-config';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
 import { postToFireStore } from '../api/database';
 
@@ -56,8 +56,11 @@ const AuthProvider = ({ children }) => {
                 postToFireStore(collectionName, data)
                 setMessage(res);
                 setIsLoading(false);
-            })
-            .then(() => navigate('/home')).catch(err => {
+            }).then(user => {
+                user.updateProfile({
+                    displayName: `${firstName} ${lastName}`,
+                })
+            }).then(() => navigate('/home')).catch(err => {
                 setMessage(err.code);
                 setIsLoading(false);
             });

@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
-        height: '100%',
+        height: '100vh',
     },
     form: {
         display: 'flex',
@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
-        height: '100%',
+        height: '100vh',
         padding: '0.5rem',
     },
 }));

@@ -1,14 +1,25 @@
 import React from 'react';
-import { Typography, Container, Box, Grid, TextField, Avatar } from '@mui/material';
+import { Container, Box, Grid } from '@mui/material';
+
+import { getAuth } from 'firebase/auth';
 
 import Button from '../components/Button';
 import Map from '../components/Map';
+import NavBar from '../components/NavBar';
 import assets from '../assets';
 
 import { useAuth } from '../provider/Authentication';
 
 const Home = () => {
+    const [currentUser, setCurrentUser] = React.useState(null);
     const { signOut } = useAuth();
+    const user = getAuth();
+
+    React.useEffect(() => {
+        // let email = user.email;
+        // setCurrentUser(user);
+        console.log('zisss', user.currentUser);
+    }, [user])
 
     const logout = () => {
         signOut();
@@ -16,13 +27,8 @@ const Home = () => {
 
     return (
         <Container maxWidth='xl'>
-            <Box mb={2}>
-                <Typography variant='h6' align='center'>
-                    Home
-                </Typography>
-                <Avatar></Avatar>
-                <Button title="logout" handleAction={() => logout()} />
-            </Box>
+            <NavBar currentUser={currentUser} />
+            <Button title="logout" handleAction={() => logout()} />
             <Box>
                 <img src={assets.map} alt="map-svg" />
             </Box>
