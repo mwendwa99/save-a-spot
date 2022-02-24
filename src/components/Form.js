@@ -6,6 +6,7 @@ import { Typography, Box, TextField, CircularProgress, Paper, Button } from '@mu
 import { NavLink } from 'react-router-dom';
 // components
 import BasicButtons from './Button';
+import Links from './Link';
 // context
 import { useAuth } from '../provider/Authentication';
 
@@ -144,9 +145,15 @@ function Form({ title, setEmail, setPassword, setFirstName, setLastName, setPlat
                     />
                     <BasicButtons
                         variant='contained'
-                        handleAction={() => dispatch({ type: state.component === 'login' ? 'signup' : 'signin' })}
+                        // handleAction={() => dispatch({ type: state.component === 'login' ? 'signup' : 'signin' })}
                         title={state.component}
                     />
+                    <Links
+                        component={state.component}
+                        title={'Sign Up'}
+                        handleAction={() => dispatch({ type: state.component === 'login' ? 'signup' : 'signin' })}
+                    />
+
                 </Paper>
             </Box>
         )
