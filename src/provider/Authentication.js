@@ -1,102 +1,38 @@
-import React, { useState, useContext, createContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-
+import React, { useEffect, useState, useContext } from 'react';
+// firebase
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { app } from '../config/firebase-config';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
-import { postToFireStore } from '../api/database';
-
-const AuthContext = createContext();
-const auth = getAuth();
+const auth = getAuth(app);
+const AuthContext = React.createContext();
 
 const AuthProvider = ({ children }) => {
-    const [message, setMessage] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-    const signIn = (email, password) => {
-        // check whether email nd password is string
-        setIsLoading(true);
-        if (typeof email !== 'string' || typeof password !== 'string') {
-            setMessage('Email and password must be string');
-            return;
-        }
-        try {
-            signInWithEmailAndPassword(auth, email, password)
-                .then(res => {
-                    sessionStorage.setItem('authToken', res._tokenResponse.refreshToken);
-                    setMessage(res);
-                    setIsLoading(false);
-                }).then(() => navigate('/home')).catch(err => {
-                    setMessage(err.code);
-                    setIsLoading(false);
-                });
-        } catch (err) {
-            setMessage(err);
-        }
-    };
-
-    const signUp = async (email, password, firstName, lastName, plate) => {
-        setIsLoading(true);
-        // check whether email and password is string
-        if (typeof email !== 'string' || typeof password !== 'string') {
-            setMessage('Email and password must be string');
-            return;
-        }
-        let data = {
-            email: email,
-            first_name: firstName,
-            last_name: lastName,
-            number_plate: plate.toUpperCase(),
-        }
-        let collectionName = 'users';
-        createUserWithEmailAndPassword(auth, email, password, firstName, lastName,)
-            .then(res => {
-                sessionStorage.setItem('authToken', res._tokenResponse.refreshToken);
-                data.user_id = res.user.uid;
-                postToFireStore(collectionName, data)
-                setMessage(res);
-                setIsLoading(false);
-            }).then(() => {
-                updateProfile(auth.currentUser, {
-                    displayName: `${firstName} ${lastName}`,
-                })
-            }).then(() => navigate('/home')).catch(err => {
-                setMessage(err.code);
-                setIsLoading(false);
-            });
-    };
-
-    const signOut = () => {
-        auth.signOut()
-        sessionStorage.removeItem('authToken')
-        navigate('/login');
-    };
-
-    const updateUser = (user) => {
-        sessionStorage.clear('authToken')
-    };
+    useEffect(() => {
+        setLoading(true);
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUser(user);
+            } else {
+                setUser(null);
+            }
+        });
+        setLoading(false);
+        return () => unsubscribe();
+    }, []);
 
     return (
         <AuthContext.Provider value={{
-            message,
-            isLoading,
-            signIn,
-            signUp,
-            signOut,
-            updateUser
+            user,
+            loading
         }}>
             {children}
         </AuthContext.Provider>
     );
 };
 
-const useAuth = () => {
-    const context = useContext(AuthContext);
-    if (context === undefined) {
-        throw new Error('useAuth must be used within a AuthProvider');
-    }
-    return context;
-}
+const useAuth = () => useContext(AuthContext);
 
 export { AuthProvider, useAuth };

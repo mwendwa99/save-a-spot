@@ -1,32 +1,95 @@
-import * as React from 'react';
-import { Typography, Box, TextField, CircularProgress, Paper } from '@mui/material';
+import React, { useEffect, useState, useReducer } from 'react';
+// toast
+import { toast } from 'react-toastify';
+// mui
+import { Typography, Box, TextField, CircularProgress, Paper, Button } from '@mui/material';
 import { NavLink } from 'react-router-dom';
-
+// components
 import BasicButtons from './Button';
-import { useAuth } from '../provider/Authentication'
+// context
+import { useAuth } from '../provider/Authentication';
 
+const initialState = {
+    component: 'login',
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: '',
+    plate: '',
+    error: '',
+    loading: false,
+    success: false
+};
+
+const reducer = (state, action) => {
+    switch (action.type) {
+        case 'signup':
+            return {
+                ...state,
+                component: 'register',
+                loading: true,
+                error: ''
+            };
+        case 'signin':
+            return {
+                ...state,
+                component: 'login',
+                loading: true,
+                error: ''
+            };
+        case 'signout':
+            return {
+                ...state,
+                loading: true,
+                error: ''
+            };
+        default:
+            return state;
+    }
+};
 
 function Form({ title, setEmail, setPassword, setFirstName, setLastName, setPlate, handleAction }) {
-    const { isLoading } = useAuth();
+    const { loading } = useAuth();
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    useEffect(() => {
+        if (state.success) {
+            toast.success(`Welcome ${state.firstName}`);
+        }
+        if (loading) {
+            return <CircularProgress />;
+        }
+    }, [state.success, loading]);
+
+
+    // const handleChange = name => event => {
+    //     setValues({ ...values, [name]: event.target.value });
+    // };
 
     const handleSubmit = (e) => {
-        e.preventDefault();
+        if (state.component === 'signin') {
+            dispatch({ type: 'signin' });
+            handleAction(state);
+        } else if (state.component === 'signup') {
+            dispatch({ type: 'signup' });
+            handleAction(state);
+        }
     };
 
-    return isLoading ? (<CircularProgress color='secondary' thickness={4} size={40} />)
+    return loading ? (<CircularProgress color='secondary' thickness={4} size={40} />)
         : (
             <Box
-                component="form"
+                // component="form"
                 sx={{
                     '& .MuiTextField-root': { m: 1, width: '25ch' },
                     pt: '0.5rem',
                 }}
-                noValidate
-                autoComplete="off"
-                onSubmit={(e) => handleSubmit(e)}
+            // noValidate
+            // autoComplete="off"
+            // onSubmit={(e) => handleSubmit(e)}
             >
                 <Paper>
-                    <Typography align='center' variant="h4">{title}</Typography>
+                    <Typography align='center' variant="h4">{state.component}</Typography>
                     <TextField
                         required
                         id="email"
@@ -79,24 +142,11 @@ function Form({ title, setEmail, setPassword, setFirstName, setLastName, setPlat
                         label="password"
                         placeholder='xyz'
                     />
-                    <BasicButtons type="submit" title={title} handleAction={() => handleAction()} />
-                    {
-                        title === 'Sign In' ?
-                            <Typography align='center' variant="body1">Do not have an account? create one &nbsp;
-                                <NavLink
-                                    style={({ isActive }) => {
-                                        return {
-                                            color: isActive ? "yellow" : "green"
-                                        }
-                                    }}
-                                    to='/register' >here</NavLink>
-                            </Typography>
-                            : title === 'Sign Up' ?
-                                <Typography align='center' variant="body1">Already have an account? sign in &nbsp;
-                                    <NavLink to='/login' >here</NavLink>
-                                </Typography>
-                                : null
-                    }
+                    <BasicButtons
+                        variant='contained'
+                        handleAction={() => dispatch({ type: state.component === 'login' ? 'signup' : 'signin' })}
+                        title={state.component}
+                    />
                 </Paper>
             </Box>
         )
